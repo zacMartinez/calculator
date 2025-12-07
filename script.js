@@ -1,4 +1,7 @@
 const funnyError = '😠Get out of my swamp!😠'
+const buttons = document.querySelector('#buttons');
+const inputDisplay = document.querySelector('#input');
+const buffer = [];
 let operandX;
 let operandY;
 let operator;
@@ -34,3 +37,12 @@ function operate(x, y, operator) {
             return 'Invalid operation';
     }
 }
+
+buttons.addEventListener('click', (e) => {
+    if (e.target.value === 'clear') {
+        buffer.splice(0, buffer.length);
+    } else {
+        buffer.push(e.target.value);
+    }
+    inputDisplay.value = buffer.join('');
+});
