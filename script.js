@@ -66,7 +66,7 @@ function parseBuffer() {
     resetState();
 
     let xEnd = false;
-    buffer.forEach((char) => {
+    buffer.forEach((char, index) => {
         if (/[0-9]/.test(char)) {
             if (xEnd) {
                 Y = Number.parseFloat (Y + char);
@@ -74,12 +74,20 @@ function parseBuffer() {
                 X = Number.parseFloat(X + char);
             }
         } else if (operators.includes(char)) {
-            xEnd = true;
-            operator = char;
+            if (index > 0) {
+                operator = char;
+                xEnd = true;
+            } else {
+                X = char === '-' ? '-' : 0;
+
+            } 
         }
     });
 }
 
+function updateDisplay() {
+
+}
 
 function updateVarDisplay() {
     xDisplay.textContent = X;
@@ -88,15 +96,17 @@ function updateVarDisplay() {
 }
 
 buttons.addEventListener('click', (e) => {
-    switch (e.target.value) {
-        case 'clear' :
+    switch (true) {
+        case e.target.value === 'clear' :
             wipeBuffer();
             break;
-        case '<' :
+        case e.target.value === '<' :
             buffer.pop(1);
             break;
-        case '=' :
+        case e.target.value === '=' :
             evaluate();
+            break;
+        case e.target.value != '-' && operators.includes(e.target.value) && buffer.length < 1:
             break;
         default:
             buffer.push(e.target.value);
