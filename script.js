@@ -40,12 +40,30 @@ function operate(x, y, operator) {
             return subtract(x, y);
         default:
             return 'Invalid operation';
+        }
+}
+
+function resetState() {
+    X = 0;
+    Y = 0;
+    operator = null;
+}
+
+function wipeBuffer() {
+    buffer.splice(0, buffer.length);
+}
+    
+function evaluate() {
+    if (operator) {
+        let answer = operate(X, Y, operator);
+        wipeBuffer();
+        buffer.push(...`${answer}`);
+        resetState();
     }
 }
 
 function parseBuffer() {
-    X = 0;
-    Y = 0;
+    resetState();
 
     let xEnd = false;
     buffer.forEach((char) => {
@@ -62,6 +80,7 @@ function parseBuffer() {
     });
 }
 
+
 function updateVarDisplay() {
     xDisplay.textContent = X;
     yDisplay.textContent = Y;
@@ -69,16 +88,18 @@ function updateVarDisplay() {
 }
 
 buttons.addEventListener('click', (e) => {
-    if (e.target.value === 'clear') {
-        buffer.splice(0, buffer.length);
-    } else if (e.target.value === '=') {
-        buffer.splice(0, buffer.length);
-        buffer.push(operate(X, Y, operator));
-        X = 0;
-        Y = 0;
-        operator = null;
-    } else {
-        buffer.push(e.target.value);
+    switch (e.target.value) {
+        case 'clear' :
+            wipeBuffer();
+            break;
+        case '<' :
+            buffer.pop(1);
+            break;
+        case '=' :
+            evaluate();
+            break;
+        default:
+            buffer.push(e.target.value);
     }
     inputDisplay.value = buffer.join('');
     parseBuffer();
