@@ -35,13 +35,17 @@ function operate(x, y, operator) {
     return +(operations[operator](x, y)).toFixed(MAX_DECIMAL); // +() ensures value is a number
 }
 
-function symbolHandler(symbol) {
-    console.log(symbol);
-;}
+function operatorHandler(input) {
+    console.log(input);
+}
+
+function inputHandler(input) {
+    console.log(input);
+} 
 
 buttons.addEventListener('click', (e) => {
     const inputValue = e.target.value;
-    
+
     switch (true) {
         case inputValue === 'clear' :
             BUFFER.splice(0, BUFFER.length);
@@ -49,8 +53,11 @@ buttons.addEventListener('click', (e) => {
         case inputValue === 'backspace' :
             BUFFER.pop(1);
             break;
-        case operations.keys().includes(inputValue) :
-            symbolHandler(inputValue);
+        case Object.keys(operations).includes(inputValue) :
+            operatorHandler(inputValue);
+            break;
+        case ['=', '.'].includes(inputValue):
+            inputHandler(inputValue);
             break;
         default :
             BUFFER.push(e.target.value);
